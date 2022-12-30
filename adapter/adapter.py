@@ -1,6 +1,7 @@
 import paho.mqtt.client as mqtt
 import datetime
 import logging
+import time
 from json import loads
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
@@ -44,6 +45,7 @@ def on_message(client, userdata, message):
         logging.debug(f'{locatie}.{statie}.{key} {val}')
 
 if __name__ == "__main__":
+    time.sleep(10)
     if getenv("DEBUG_DATA_FLOW") == "true":
         logging.basicConfig(level=logging.DEBUG, format="%(asctime)s %(message)s", datefmt='%Y-%m-%d %H:%M:%S')
     logging.error("Setting, Done") 

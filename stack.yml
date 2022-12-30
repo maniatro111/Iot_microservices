@@ -19,8 +19,6 @@ services:
                 image: influxdb:latest
                 volumes:
                         - "${SPRC_DVP}/database:/var/lib/influxdb2"
-                ports:
-                        - "8086:8086"
                 networks:
                         - database_manager
                 environment:
