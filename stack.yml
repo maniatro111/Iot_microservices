@@ -3,7 +3,6 @@ version: '3.5'
 services:
 
         adapter:
-                #                container_name: sprc3_adapter
                 depends_on:
                         - influxdb
                         - broker
@@ -18,9 +17,10 @@ services:
 
         influxdb:
                 image: influxdb:latest
-                #                container_name: sprc3_influxdb
                 volumes:
                         - "${SPRC_DVP}/database:/var/lib/influxdb2"
+                ports:
+                        - "8086:8086"
                 networks:
                         - database_manager
                 environment:
@@ -33,7 +33,6 @@ services:
 
         broker:
                 image: eclipse-mosquitto:latest
-                #                container_name: sprc3_broker
                 ports:
                         - "1883:1883"
                 volumes:
@@ -45,7 +44,6 @@ services:
 
         grafana:
                 image: grafana/grafana:latest
-                #                container_name: sprc3_grafana
                 ports:
                         - "80:3000"
                 volumes:

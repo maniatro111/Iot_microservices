@@ -46,11 +46,13 @@ def on_message(client, userdata, message):
 if __name__ == "__main__":
     if getenv("DEBUG_DATA_FLOW") == "true":
         logging.basicConfig(level=logging.DEBUG, format="%(asctime)s %(message)s", datefmt='%Y-%m-%d %H:%M:%S')
-    
+    logging.error("Setting, Done") 
     try:
         db_comm = InfluxDBClient(url=f'http://sprc3_influxdb:8086', token="balls", org="my-org")
     except:
         print("Couldn't connect to db")
+
+    logging.error("Connecting to Db, done")
 
     try:
         client = mqtt.Client("Adapter", userdata=db_comm)
@@ -58,6 +60,8 @@ if __name__ == "__main__":
         client.subscribe("#")
     except:
         print("Couldn't connect to mqtt broker.")
+
+    logging.error("Connecting to broker. Done")
     
     client.on_message = on_message
     client.loop_forever()
