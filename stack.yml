@@ -1,0 +1,66 @@
+version: '3.5'
+
+services:
+
+        adapter:
+                #                container_name: sprc3_adapter
+                depends_on:
+                        - influxdb
+                        - broker
+                image: adapter
+                build: "./adapter"
+                networks:
+                        - broker-network
+                        - database_manager
+                environment:
+                        DEBUG_DATA_FLOW: "true"
+
+
+        influxdb:
+                image: influxdb:latest
+                #                container_name: sprc3_influxdb
+                volumes:
+                        - "${SPRC_DVP}/database:/var/lib/influxdb2"
+                networks:
+                        - database_manager
+                environment:
+                        DOCKER_INFLUXDB_INIT_MODE: setup
+                        DOCKER_INFLUXDB_INIT_USERNAME: my-user
+                        DOCKER_INFLUXDB_INIT_PASSWORD: my-password
+                        DOCKER_INFLUXDB_INIT_ORG: my-org
+                        DOCKER_INFLUXDB_INIT_BUCKET: my-bucket
+                        DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: balls
+
+        broker:
+                image: eclipse-mosquitto:latest
+                #                container_name: sprc3_broker
+                ports:
+                        - "1883:1883"
+                volumes:
+                        - "./mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf"
+                        - "${SPRC_DVP}/mosquitto/data:/mosquitto/data"
+                        - "${SPRC_DVP}/mosquitto/log:/mosquitto/log"
+                networks:
+                        - broker-network
+
+        grafana:
+                image: grafana/grafana:latest
+                #                container_name: sprc3_grafana
+                ports:
+                        - "80:3000"
+                volumes:
+                       - "${SPRC_DVP}/grafana-storage:/var/lib/grafana"
+                       - "./grafana-provisioning:/etc/grafana/provisioning"
+                depends_on:
+                        - influxdb
+                networks:
+                        - database_manager
+                environment:
+                        GF_SECURITY_ADMIN_USER: asistent
+                        GF_SECURITY_ADMIN_PASSWORD: grafanaSPRC2021
+
+networks:
+        database_manager:
+                name: database_manager
+        broker-network:
+                name: broker-network 

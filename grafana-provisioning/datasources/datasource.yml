@@ -1,0 +1,17 @@
+apiVersion: 1
+datasources:
+  - orgId: 1
+    version: 2
+    name: InfluxDB
+    type: influxdb
+    access: proxy
+    url: http://sprc3_influxdb:8086
+    basicAuth: true
+    isDefault: true
+    jsonData:
+            defaultBucket: my-bucket
+            httpMode: POST
+            organization: my-org
+            version: Flux
+    secureJsonData:
+            token: balls
