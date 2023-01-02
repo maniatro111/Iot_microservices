@@ -45,7 +45,6 @@ def on_message(client, userdata, message):
         logging.debug(f'{locatie}.{statie}.{key} {val}')
 
 if __name__ == "__main__":
-    time.sleep(10)
     if getenv("DEBUG_DATA_FLOW") == "true":
         logging.basicConfig(level=logging.DEBUG, format="%(asctime)s %(message)s", datefmt='%Y-%m-%d %H:%M:%S')
     logging.error("Setting, Done") 
