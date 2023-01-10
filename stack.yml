@@ -9,25 +9,25 @@ services:
                 image: adapter
                 build: "./adapter"
                 networks:
-                        - broker-network
-                        - database_manager
+                        - broker-adapter-network
+                        - database-adapter-network
                 environment:
                         DEBUG_DATA_FLOW: "true"
-
 
         influxdb:
                 image: influxdb:latest
                 volumes:
                         - "${SPRC_DVP}/database:/var/lib/influxdb2"
                 networks:
-                        - database_manager
+                        - database-manager-network
+                        - database-adapter-network
                 environment:
                         DOCKER_INFLUXDB_INIT_MODE: setup
                         DOCKER_INFLUXDB_INIT_USERNAME: my-user
                         DOCKER_INFLUXDB_INIT_PASSWORD: my-password
                         DOCKER_INFLUXDB_INIT_ORG: my-org
                         DOCKER_INFLUXDB_INIT_BUCKET: my-bucket
-                        DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: balls
+                        DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: my-token
 
         broker:
                 image: eclipse-mosquitto:latest
@@ -35,10 +35,8 @@ services:
                         - "1883:1883"
                 volumes:
                         - "./mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf"
-                        - "${SPRC_DVP}/mosquitto/data:/mosquitto/data"
-                        - "${SPRC_DVP}/mosquitto/log:/mosquitto/log"
                 networks:
-                        - broker-network
+                        - broker-adapter-network
 
         grafana:
                 image: grafana/grafana:latest
@@ -50,13 +48,15 @@ services:
                 depends_on:
                         - influxdb
                 networks:
-                        - database_manager
+                        - database-manager-network
                 environment:
                         GF_SECURITY_ADMIN_USER: asistent
                         GF_SECURITY_ADMIN_PASSWORD: grafanaSPRC2021
 
 networks:
-        database_manager:
-                name: database_manager
-        broker-network:
-                name: broker-network 
+        database-manager-network:
+                name: database-manager-network
+        broker-adapter-network:
+                name: broker-adapter-network
+        database-adapter-network:
+                name: database-adapter-network

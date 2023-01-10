@@ -14,4 +14,4 @@ datasources:
             organization: my-org
             version: Flux
     secureJsonData:
-            token: balls
+            token: my-token

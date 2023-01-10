@@ -33,6 +33,7 @@ if __name__ == "__main__":
     except:
         print("No broker on port 1883.")
         exit(0)
+
     client.loop_start()
 
     batts = list(range(80, 101))
@@ -58,5 +59,3 @@ if __name__ == "__main__":
         print(f'Station {station} published:\n{dumps(iot_data, indent=4)}\n')
 
         sleep(choice(times) * 60)
-    client.disconnect()
-    client.loop_stop()

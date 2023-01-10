@@ -1,8 +1,6 @@
 #!/bin/bash
 
 mkdir -p ${SPRC_DVP}/database
-mkdir -p ${SPRC_DVP}/mosquitto/data
-mkdir -p ${SPRC_DVP}/mosquitto/log
 mkdir -p ${SPRC_DVP}/grafana-storage
 
 chmod o+w ${SPRC_DVP}/grafana-storage

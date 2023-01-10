@@ -1,9 +1,8 @@
 import paho.mqtt.client as mqtt
 import datetime
 import logging
-import time
 from json import loads
-from influxdb_client import InfluxDBClient, Point
+from influxdb_client import InfluxDBClient
 from influxdb_client.client.write_api import SYNCHRONOUS
 from re import match
 from os import getenv
@@ -12,7 +11,7 @@ def on_message(client, userdata, message):
     if not match(r'^[^/]+/[^/]+$', message.topic):
                 return
 
-    logging.debug(f'Received a message by topic [{message.topic}]') 
+    logging.debug(f'Received a message by topic [{message.topic}]')
 
     locatie, statie = message.topic.split("/")
 
@@ -34,8 +33,7 @@ def on_message(client, userdata, message):
             'measurement': f'{statie}.{key}',
             'tags': {
                 'type': f'{key}',
-                'statie': f'{statie}',
-                'locatie': f'{locatie}'
+                'statie': f'{statie}'
                 },
             'time': tstamp.strftime('%Y-%m-%dT%H:%M:%S'),
             'fields': {
@@ -45,11 +43,14 @@ def on_message(client, userdata, message):
         logging.debug(f'{locatie}.{statie}.{key} {val}')
 
 if __name__ == "__main__":
+
     if getenv("DEBUG_DATA_FLOW") == "true":
         logging.basicConfig(level=logging.DEBUG, format="%(asctime)s %(message)s", datefmt='%Y-%m-%d %H:%M:%S')
-    logging.error("Setting, Done") 
+
+    logging.error("Setting, Done")
+
     try:
-        db_comm = InfluxDBClient(url=f'http://sprc3_influxdb:8086', token="balls", org="my-org")
+        db_comm = InfluxDBClient(url='http://sprc3_influxdb:8086', token="my-token", org="my-org")
     except:
         print("Couldn't connect to db")
 
